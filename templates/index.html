@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Finance Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css', _external=True) }}">
+</head>
+<body>
+    <h1>Personal Finance Tracker</h1>
+    <a href="{{ url_for('logout') }}">Logout</a>
+    <form method="post">
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" required>
+        <label for="amount">Amount:</label>
+        <input type="number" step="0.01" id="amount" name="amount" required>
+        <label for="transaction_type">Transaction Type:</label>
+        <select id="transaction_type" name="transaction_type">
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+        </select>
+        <button type="submit">Add Transaction</button>
+    </form>
+    <h2>Transactions</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction.description }}</td>
+                    <td>{{ transaction.amount }}</td>
+                    <td>{{ transaction.transaction_type }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2>Summary</h2>
+    <p>Income: {{ income }}</p>
+    <p>Expenses: {{ expenses }}</p>
+    <p>Savings: {{ savings }}</p>
+</body>
+</html>
