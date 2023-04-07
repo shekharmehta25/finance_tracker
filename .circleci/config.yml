@@ -16,6 +16,9 @@ jobs:
     executor: python-executor
     steps:
       - checkout
+      - run: 
+          name: Install dependencies
+          command: pip3 install -r requirements.txt
       - run:
           name: Install Google Cloud SDK
           command: |
