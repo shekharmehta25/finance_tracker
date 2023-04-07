@@ -21,13 +21,17 @@ jobs:
       - checkout
       - run: echo $GOOGLE_SERVICE_ACCOUNT_KEY > service_account_key.json
       - run: sudo apt-get update
+      - run: echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+      - run: curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+      - run: sudo apt-get update
       - run: sudo apt-get install -y google-cloud-sdk
       - run: gcloud auth activate-service-account --key-file service_account_key.json
-      - run: gcloud config set project <YOUR_REPO_NAME>
+      - run: gcloud config set project finance-tracker-383004
       - run: |
-          gcloud compute ssh <YOUR_GCE_INSTANCE> --command "git pull" --zone=<YOUR_INSTANCE_ZONE>
-          gcloud compute ssh <YOUR_GCE_INSTANCE> --command "sudo pkill -f app.py" --zone=<YOUR_INSTANCE_ZONE>
-          gcloud compute ssh <YOUR_GCE_INSTANCE> --command ". venv/bin/activate && nohup python app.py > app.log 2>&1 &" --zone=<YOUR_INSTANCE_ZONE>
+          gcloud compute ssh finance --command "git pull" --zone=us-central1-a
+          gcloud compute ssh finance --command "sudo pkill -f app.py" --zone=us-central1-a
+          gcloud compute ssh finance --command ". venv/bin/activate && nohup python app.py > app.log 2>&1 &" --zone=us-central1-a
+
 
 workflows:
   version: 2
