@@ -17,8 +17,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Google Cloud SDK
+          name: Setup Google Cloud SDK
           command: |
+            echo 'export PATH=$PATH:/home/circleci/google-cloud-sdk/bin' >> $BASH_ENV
+            source $BASH_ENV
             sudo apt-get install -y google-cloud-sdk
       - run:
           name: Deploy to App Engine
