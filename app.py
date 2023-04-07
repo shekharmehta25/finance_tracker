@@ -84,10 +84,5 @@ def index():
     savings = income - expenses
     return render_template('index.html', transactions=transactions, income=income, expenses=expenses, savings=savings)
 
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    app.static_folder = 'templates'
-    app.run(host='0.0.0.0', port=5002)
 
 
