@@ -6,7 +6,7 @@ executors:
       - image: circleci/python:3.9
 
 jobs:
-  build:
+  build_and_test:
     executor: python-executor
     steps:
       - checkout
