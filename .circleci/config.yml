@@ -10,7 +10,8 @@ jobs:
     executor: python-executor
     steps:
       - checkout
-      - run: python3 -m venv venv
+      - run: sudo pip install virtualenv
+      - run: virtualenv venv
       - run: . venv/bin/activate
       - run: pip install -r requirements.txt
       
@@ -18,7 +19,8 @@ jobs:
     executor: python-executor
     steps:
       - checkout
-      - run: python3 -m venv venv
+      - run: sudo pip install virtualenv
+      - run: virtualenv venv
       - run: . venv/bin/activate
       - run: pip install -r requirements.txt
       - run:
@@ -45,4 +47,4 @@ workflows:
           filters:
             branches:
               only:
-                - main  
+                - main
