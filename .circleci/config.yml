@@ -10,19 +10,13 @@ jobs:
     executor: python-executor
     steps:
       - checkout
-      - run: sudo pip install virtualenv
-      - run: virtualenv --always-copy venv
-      - run: . venv/bin/activate
-      - run: pip install -r requirements.txt
+      - run: sudo pip install -r requirements.txt
       
   deploy:
     executor: python-executor
     steps:
       - checkout
-      - run: sudo pip install virtualenv
-      - run: virtualenv --always-copy venv
-      - run: . venv/bin/activate
-      - run: pip install -r requirements.txt
+      - run: sudo pip install -r requirements.txt
       - run:
           name: Install Google Cloud SDK
           command: |
