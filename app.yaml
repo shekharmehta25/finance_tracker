@@ -3,3 +3,7 @@ runtime: python39
 entrypoint: python3 main.py
 
 instance_class: F1
+
+env_variables:
+  SECRET_KEY: 'secret-key'
+  SQLALCHEMY_DATABASE_URI: 'sqlite:///finance_tracker.db'
