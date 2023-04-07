@@ -1,8 +1,8 @@
 runtime: python39
 
-entrypoint: gunicorn -b :$PORT app:app
+entrypoint: python3 main.py
 
-instance_class: F2
+instance_class: F1
 
 env_variables:
   SECRET_KEY: 'secret-key'
