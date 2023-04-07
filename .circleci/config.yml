@@ -1,15 +1,52 @@
 version: 2.1
 
+executors:
+  python-executor:
+    docker:
+      - image: circleci/python:3.9
+
 jobs:
   build:
-    working_directory: ~/circleci-python
-    docker:
-      - image: "circleci/python:3.6.4"
+    executor: python-executor
     steps:
       - checkout
-      - run: python3 main.py
+      - run:
+          name: Install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      - run:
+          name: Run tests
+          command: |
+            . venv/bin/activate
+            python -m unittest app.test
+
+  deploy:
+    executor: python-executor
+    steps:
+      - checkout
+      - run:
+          name: Install Google Cloud SDK
+          command: |
+            sudo apt-get install -y google-cloud-sdk
+      - run:
+          name: Deploy to App Engine
+          command: |
+            echo $GCLOUD_SERVICE_KEY > keyfile.json
+            gcloud auth activate-service-account --key-file=keyfile.json
+            gcloud config set project $GCLOUD_PROJECT
+            gcloud -q app deploy app.yaml
 
 workflows:
-  build:
+  version: 2
+  build-deploy:
     jobs:
       - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches
+        only:
+          - main
