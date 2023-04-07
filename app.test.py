@@ -6,7 +6,7 @@ class FinanceTrackerTestCase(TestCase):
     def create_app(self):
         app.config['TESTING'] = True
         app.config['WTF_CSRF_ENABLED'] = False
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///finance_tracker.db'
         return app
 
     def setUp(self):
