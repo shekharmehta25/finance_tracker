@@ -11,7 +11,7 @@ jobs:
     steps:
       - checkout
       - run: sudo pip install virtualenv
-      - run: virtualenv venv
+      - run: virtualenv --clear -p python3 venv
       - run: . venv/bin/activate
       - run: pip install -r requirements.txt
       
@@ -20,7 +20,7 @@ jobs:
     steps:
       - checkout
       - run: sudo pip install virtualenv
-      - run: virtualenv venv
+      - run: virtualenv --clear -p python3 venv
       - run: . venv/bin/activate
       - run: pip install -r requirements.txt
       - run:
