@@ -6,45 +6,37 @@ executors:
       - image: circleci/python:3.9
 
 jobs:
-  build:
+  build_and_test:
     executor: python-executor
     steps:
       - checkout
-      - run: sudo pip install virtualenv
-      - run: virtualenv --clear -p python3 venv
+      - run: sudo apt-get install -y python3-venv
+      - run: python3 -m venv venv
       - run: . venv/bin/activate
       - run: pip install -r requirements.txt
-      
+      - run: pytest
+
   deploy:
     executor: python-executor
     steps:
       - checkout
-      - run: sudo pip install virtualenv
-      - run: virtualenv --clear -p python3 venv
-      - run: . venv/bin/activate
-      - run: pip install -r requirements.txt
-      - run:
-          name: Install Google Cloud SDK
-          command: |
-            echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-            curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-            sudo apt-get update && sudo apt-get install -y google-cloud-sdk
-      - run:
-          name: Deploy to App Engine
-          command: |
-            echo $GCLOUD_SERVICE_KEY > keyfile.json
-            gcloud auth activate-service-account --key-file=keyfile.json
-            gcloud config set project $GCLOUD_PROJECT
-            gcloud -q app deploy app.yaml
+      - run: echo $GOOGLE_SERVICE_ACCOUNT_KEY > service_account_key.json
+      - run: sudo apt-get install -y google-cloud-sdk
+      - run: gcloud auth activate-service-account --key-file service_account_key.json
+      - run: gcloud config set project finance_tracker
+      - run: |
+          gcloud compute ssh finance --command "git pull" --zone=<YOUR_INSTANCE_ZONE>
+          gcloud compute ssh finance --command "sudo pkill -f app.py" --zone=<YOUR_INSTANCE_ZONE>
+          gcloud compute ssh finance --command ". venv/bin/activate && nohup python app.py > app.log 2>&1 &" --zone=<YOUR_INSTANCE_ZONE>
+
 workflows:
   version: 2
   build-deploy:
     jobs:
-      - build
+      - build_and_test
       - deploy:
           requires:
-            - build
+            - build_and_test
           filters:
             branches:
-              only:
-                - main
+              only: dev1
